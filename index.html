@@ -1,0 +1,105 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>WebMap viewer</title>
+    <style>
+        html,
+        body,
+        #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.24/esri/themes/light/main.css"/>
+    <script src="https://js.arcgis.com/4.24/"></script>
+    <script>
+        require([
+            "esri/config",
+            "esri/portal/Portal",
+            "esri/identity/OAuthInfo",
+            "esri/identity/IdentityManager",
+            "esri/WebMap",
+            "esri/views/MapView",
+
+            // Widgets
+            "esri/widgets/Home",
+            "esri/widgets/Zoom",
+            "esri/widgets/Search",
+            "esri/widgets/Legend",
+            "esri/widgets/LayerList",
+            "esri/widgets/ScaleBar"
+
+        ], (
+            esriConfig,
+            Portal,
+            OAuthInfo,
+            esriId,
+            WebMap,
+            MapView,
+            Home,
+            Zoom,
+            Search,
+            Legend,
+            LayerList,
+            ScaleBar
+        ) => {
+
+            esriConfig.portalUrl = "https://acc-gisportaal.alliander.com/portal";
+
+            const portal = new Portal();
+
+            const info = new OAuthInfo({
+                appId: "usOpgIUTSqNJKwMe",
+                popUp: false,
+                portalUrl: "https://acc-gisportaal.alliander.com/portal"
+            });
+
+            esriId.registerOAuthInfos([info]);
+
+            const webmap = new WebMap({
+                portalItem: {
+                    id: "7ce80970ade041b3a6dedc2798059597"
+                }
+            });
+            const view = new MapView({
+                map: webmap,
+                container: "viewDiv"
+            });
+
+            const searchWidget = new Search({
+                view: view
+            });
+            view.ui.add(searchWidget, "top-right");
+
+            const home = new Home({
+                view: view
+            });
+            view.ui.add(home, "top-left");
+
+            const scaleBar = new ScaleBar({
+                view: view,
+                unit: "metric",
+                style: "ruler"
+            });
+            view.ui.add(scaleBar, "bottom-left");
+
+            const legendWidget = new Legend({
+                view: view
+            });
+            view.ui.add(legendWidget, {position: "bottom-right"});
+
+            const LayerListWidget = new LayerList({
+                view: view
+            });
+            view.ui.add(LayerListWidget, {position: "bottom-right"});
+
+        });
+    </script>
+</head>
+<body>
+<div id="viewDiv"></div>
+</body>
+</html>
